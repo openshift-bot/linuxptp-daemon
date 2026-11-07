@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/go-toolset:1.26 AS builder
+FROM registry.ci.openshift.org/ocp/builder:rhel-9-golang-1.26-openshift-5.1 AS builder
 USER root
 WORKDIR /go/src/github.com/k8snetworkplumbingwg/linuxptp-daemon
 
@@ -15,7 +15,7 @@ ARG GIT_COMMIT=unknown
 ENV GIT_COMMIT=${GIT_COMMIT}
 RUN --mount=type=cache,target=/root/.cache/go-build make
 
-FROM quay.io/centos/centos:stream9
+FROM registry.ci.openshift.org/ocp/5.1:base-rhel9
 
 COPY --from=builder /go/src/github.com/k8snetworkplumbingwg/linuxptp-daemon/bin/cloud-event-proxy /usr/local/bin/
 
